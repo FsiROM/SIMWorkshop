@@ -6,3 +6,4 @@ coSimData/*
 Draft/*
 
 *__pycache__*/*
+*/.DS_Store

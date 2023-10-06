@@ -1,0 +1,71 @@
+{
+    "problem_data"             : {
+        "problem_name"    : "Mok_CSM",
+        "parallel_type"   : "OpenMP",
+        "start_time"      : 0.0,
+        "end_time"        : 25.0,
+        "echo_level"      : 3
+    },
+    "solver_settings" : {
+        "solver_type"                        : "static",
+        "echo_level"                         : 0,
+        "analysis_type"                      : "non_linear",
+        "model_part_name"                    : "Structure",
+        "domain_size"                        : 2,
+        "model_import_settings"              : {
+            "input_type"     : "mdpa",
+            "input_filename" : "Mok_CSM_copy"
+        },
+        "material_import_settings"           : {
+            "materials_filename" : "StructuralMaterials.json"
+        },
+        "time_stepping"               : {
+            "time_step"           : 0.15
+        },
+        "line_search"                        : false,
+        "convergence_criterion"              : "residual_criterion",
+        "displacement_relative_tolerance"    : 1e-6,
+        "displacement_absolute_tolerance"    : 1e-6,
+        "residual_relative_tolerance"        : 1e-6,
+        "residual_absolute_tolerance"        : 1e-6,
+        "max_iteration"                      : 25,
+        "linear_solver_settings"             : {
+            "solver_type" : "LinearSolversApplication.sparse_qr"
+        },
+        "rotation_dofs"            : false
+    },
+    "processes" : {
+        "constraints_process_list" : [{
+            "python_module" : "assign_vector_variable_process",
+            "kratos_module" : "KratosMultiphysics",
+            "Parameters"    : {
+                "model_part_name" : "Structure.bottom",
+                "variable_name"   : "DISPLACEMENT",
+                "constrained"     : [true,true,true],
+                "value"           : [0.0,0.0,0.0],
+                "interval"        : [0.0,"End"]
+            }
+        }],
+        "loads_process_list"       : []
+    },
+    "output_processes" : {
+        "vtk_output" : [{
+            "python_module" : "vtk_output_process",
+            "kratos_module" : "KratosMultiphysics",
+            "process_name"  : "VtkOutputProcess",
+            "help"          : "This process writes postprocessing files for Paraview",
+            "Parameters"    : {
+                "model_part_name"                    : "Structure",
+                "output_control_type"                : "step",
+                "output_interval"                    : 1,
+                "file_format"                        : "binary",
+                "output_precision"                   : 7,
+                "output_sub_model_parts"             : false,
+                "output_path"                        : "vtk_output_mok_fsi_csd",
+                "save_output_files_in_folder"        : true,
+                "nodal_solution_step_data_variables" : ["DISPLACEMENT", "POINT_LOAD"],
+                "gauss_point_variables_in_elements" : ["CAUCHY_STRESS_VECTOR", "GREEN_LAGRANGE_STRAIN_VECTOR"]
+            }
+        }]
+    }
+}

@@ -1,0 +1,8 @@
+vtk_output_mok_fsi_cfd/*.vtk
+vtk_output_mok_fsi_csd/*.vtk
+
+coSimData/*
+.ipynb_checkpoints/*
+Draft/*
+
+*__pycache__*/*

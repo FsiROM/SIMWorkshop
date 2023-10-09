@@ -17,7 +17,7 @@ cp FsiROM_Kratos_patch/fluid_solver.py $pyth_pip_path/KratosMultiphysics/FluidDy
 
 git clone --single-branch --branch Workshop https://github.com/azzeddinetiba/ROM_AM.git > /dev/null 2>&1
 pip install ROM_AM/.
-pip install pyvista  > /dev/null 2>&1
+wget "https://fem-on-colab.github.io/releases/vtk-install.sh" -O "/tmp/vtk-install.sh" && bash "/tmp/vtk-install.sh" > /dev/null 2>&1
 
 export OMP_NUM_THREADS=1
 

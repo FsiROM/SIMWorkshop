@@ -68,7 +68,7 @@
                 "mesh_id"         : 0,
                 "model_part_name" : "FluidModelPart.inlet",
                 "variable_name"   : "VELOCITY",
-                "modulus"         : "(0.1*(cos(0.2*pi*(t-10.))) + 0.1*(cos(.05*pi*(t-10.)))+0.8) * 16*y*(1-y)",
+                "modulus"         : "(0.1*(cos(0.2*pi*(t-10.))) + 0.1*(cos(1.1*pi*(t-10.)))+0.8) * 16*y*(1-y)",
                 "constrained"     : true,
                 "direction"       : "automatic_inwards_normal",
                 "interval"        : [10.0,"End"]

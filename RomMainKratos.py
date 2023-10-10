@@ -13,5 +13,5 @@ parameter_file_name = "ProjectParametersCoSim.json"
 with open(parameter_file_name,'r') as parameter_file:
     parameters = KM.Parameters(parameter_file.read())
 
-simulation = CoRomSimulationAnalysis(parameters, outputReduc_model=MYFUNCT(.9999), inputReduc_model=PodReducer(24))
+simulation = CoRomSimulationAnalysis(parameters,)
 simulation.Run()

@@ -126,7 +126,7 @@
                         "variable_name" : "POINT_LOAD"
                     }
                 },
-                "launch_time" : 2.0,
+                "launch_time" : 1.0,
                 "use_map" : false,
                 "save_training_data" : true,
                 "input_data"              : {"data" : "load"},

@@ -6,8 +6,8 @@ coSimData/*
 Draft/*
 
 *__pycache__*/*
-#*/.DS_Store
-#*.DS_Store
+*/.DS_Store
+*.DS_Store
 ProjectPrametersOutput.json
 *__pycache__
 *.pyc

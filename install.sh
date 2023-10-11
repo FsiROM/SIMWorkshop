@@ -20,7 +20,7 @@ git clone --single-branch --branch Workshop https://github.com/azzeddinetiba/ROM
 pip install ROM_AM/. > /dev/null 2>&1
 
 printf "\n============= Installing pyvista:\n"
-wget "https://fem-on-colab.github.io/releases/vtk-install.sh" -O "/tmp/vtk-install.sh" && bash "/tmp/vtk-install.sh" > /dev/null 2>&1
+wget "https://fem-on-colab.github.io/releases/vtk-install.sh" -O "/tmp/vtk-install.sh" > /dev/null 2>&1 && bash "/tmp/vtk-install.sh" > /dev/null 2>&1
 
 export OMP_NUM_THREADS=1
 

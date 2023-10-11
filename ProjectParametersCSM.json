@@ -64,7 +64,7 @@
                 "output_path"                        : "vtk_output_mok_fsi_csd",
                 "save_output_files_in_folder"        : true,
                 "nodal_solution_step_data_variables" : ["DISPLACEMENT", "POINT_LOAD"],
-                "gauss_point_variables_in_elements" : ["CAUCHY_STRESS_VECTOR", "GREEN_LAGRANGE_STRAIN_VECTOR"]
+                "gauss_point_variables_in_elements" : ["PK2_STRESS_VECTOR", "GREEN_LAGRANGE_STRAIN_VECTOR"]
             }
         }]
     }

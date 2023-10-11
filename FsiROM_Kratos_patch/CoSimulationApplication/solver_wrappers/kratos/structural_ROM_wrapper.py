@@ -25,6 +25,7 @@ class StructuralROMWrapper(structural_mechanics_wrapper.StructuralMechanicsWrapp
         super().__init__(settings, model, solver_name)
 
         self.ModelPart = self._analysis_stage._GetSolver().GetComputingModelPart()
+        self.x0_vec = KM.VariableUtils().GetInitialPositionsVector(self.ModelPart.Nodes,2)
         self.initialize_data()
         self.get_rom_settings()
         self.trained = False
@@ -178,6 +179,8 @@ class StructuralROMWrapper(structural_mechanics_wrapper.StructuralMechanicsWrapp
                 else:
                     KM.VariableUtils().SetSolutionStepValuesVector(self.ModelPart.Nodes,
                                                                 KM.DISPLACEMENT, 1.*predicted_disp, 0)
+                    x_vec = self.x0_vec + 1.*predicted_disp
+                    KM.VariableUtils().SetCurrentPositionsVector(self.ModelPart.Nodes,1.*x_vec)
                 self.ModelPart.GetCommunicator().SynchronizeVariable(KM.DISPLACEMENT)
 
                 # c = 0
@@ -343,7 +346,7 @@ class StructuralROMWrapper(structural_mechanics_wrapper.StructuralMechanicsWrapp
             "data"                    : {},
             "mpi_settings"            : {},
             "echo_level"              : 0,
-            "launch_time"             : 1.0,
+            "launch_time"             : 100.0,
             "force_norm_regr"         : false,
             "disp_norm_regr"          : false,
             "force_norm"              : "l2",

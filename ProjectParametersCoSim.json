@@ -128,7 +128,6 @@
                 },
                 "launch_time" : 1.0,
                 "use_map" : false,
-                "save_training_data" : true,
                 "input_data"              : {"data" : "load"},
                 "output_data"              : {"data" : "disp"},
                 "imported_model" : true,

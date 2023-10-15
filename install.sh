@@ -1,4 +1,12 @@
-pyth_pip_path=$(python -c "exec(\"import site\nprint(site.getsitepackages()[0])\")")
+pythcmd="python"
+while getopts p: flag
+do
+    case "${flag}" in
+        p) pythcmd=${OPTARG};;
+    esac
+
+done
+pyth_pip_path=$($pythcmd -c "exec(\"import site\nprint(site.getsitepackages()[0])\")")
 
 printf "\n============= Installing KratosMultiphysics and necessary applications\n"
 pip install KratosMultiphysics==9.4 > /dev/null 2>&1

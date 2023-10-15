@@ -9,7 +9,7 @@ from KratosMultiphysics import StructuralMechanicsApplication
 # Other imports
 import numpy as np
 from collections import deque
-from rom_am import solid_rom
+from rom_am.solid_rom import solid_ROM
 import KratosMultiphysics.CoSimulationApplication.co_simulation_tools as cs_tools
 import time
 
@@ -82,7 +82,7 @@ class StructuralROMWrapper(structural_mechanics_wrapper.StructuralMechanicsWrapp
     def train_rom(self):
 
         if not self.trained:
-            self.rom_model = solid_rom.solid_ROM()
+            self.rom_model = solid_ROM()
 
             # ======= Import a trained ROM model ============
             if self.imported_model:
@@ -95,8 +95,8 @@ class StructuralROMWrapper(structural_mechanics_wrapper.StructuralMechanicsWrapp
             else:
                 #coords = np.asarray(self.GetInterfaceData(self.output_data_name).model_part.GetNodes())[:, :2]
                 self.rom_model.train(np.asarray(self.load_data)[:, :, 0].T, np.asarray(self.displacement_data)[:, :, 0].T, 
-                                     rank_pres=20, rank_disp=.9999,
-                                     map_used = self.map_used, 
+                                     rank_pres=24, rank_disp=.9999,
+                                     map_used = self.map_used,
                                      norm_regr=[self.force_norm_regr, self.disp_norm_regr],
                                      norm=[self.force_norm, self.disp_norm], 
                                      forcesReduc_model=self.inputReduc_model, regression_model=self.regression_model,
@@ -268,7 +268,7 @@ class StructuralROMWrapper(structural_mechanics_wrapper.StructuralMechanicsWrapp
                 self.ids_global.append(node.Id)
             self.ids_ = np.in1d(self.ids_global, 
                                 self.ids_local).nonzero()[0]
-            c = np.empty((2*self.ids_.size,), dtype=self.ids_ .dtype)
+            c = np.empty((2*self.ids_.size,), dtype=self.ids_.dtype)
             c[::2] = 2*self.ids_
             c[1::2] = 2*self.ids_+1
             self.ids_ = c

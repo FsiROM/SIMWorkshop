@@ -2,6 +2,13 @@ import numpy as np
 from rom_am.pod import POD
 from rom_am.rom import ROM
 from rom_am.dimreducers.rom_DimensionalityReducer import *
+from sklearn.linear_model import LassoLarsIC
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import make_pipeline
+from rom_am.regressors.rom_regressor import *
+from rom_am.quad_man import QUAD_MAN
+from rom_am.dimreducers.rom_am.podReducer import PodReducer
 
 
 class MyForceReducer(RomDimensionalityReducer):
@@ -36,21 +43,13 @@ class MyForceReducer(RomDimensionalityReducer):
     def reduced_data(self):
         return self.pod.pod_coeff
 
-import numpy as np
-
 
 class MyDispReducer(MyForceReducer):
 
-      def decode(self, new_data, high_dim=False):
+    def decode(self, new_data, high_dim=False):
 
         interm = self.pod.inverse_project(new_data)
         return self.rom.decenter(self.rom.denormalize(interm))
-
-from sklearn.linear_model import LassoLarsIC
-from sklearn.multioutput import MultiOutputRegressor
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.pipeline import make_pipeline
-from rom_am.regressors.rom_regressor import *
 
 
 class MyRegressor(RomRegressor):
@@ -90,36 +89,50 @@ class MyRegressor(RomRegressor):
 
         return res
 
+
 class MyMappedDispReducer(MyDispReducer):
 
-  def train(self, data, map_used=None, normalize=True, center=True):
-    super().train(data, map_used=map_used, normalize=normalize, center=center)
+    def train(self, data, map_used=None, normalize=True, center=True):
+        super().train(data, map_used=map_used, normalize=normalize, center=center)
 
-    if map_used is not None:
-        self.interface_dim = map_used.shape[0]
-        self.map_mat = map_used
-        self.inverse_project_mat = self.map_mat @ self.rom.denormalize(
-            self.pod.modes)
+        if map_used is not None:
+            self.interface_dim = map_used.shape[0]
+            self.map_mat = map_used
+            self.inverse_project_mat = self.map_mat @ self.rom.denormalize(
+                self.pod.modes)
 
-        if center:
-            self.mapped_mean_flow = self.map_mat @ self.rom.mean_flow.reshape(
-                (-1, 1))
+            if center:
+                self.mapped_mean_flow = self.map_mat @ self.rom.mean_flow.reshape(
+                    (-1, 1))
 
-  def decode(self, new_data, high_dim=False):
+    def decode(self, new_data, high_dim=False):
 
-      if self.map_mat is not None and not high_dim:
-          interm = self._mapped_decode(new_data)
-          if self.center:
-              interm = (
-                  interm + self.mapped_mean_flow).reshape((-1, new_data.shape[1]))
-          return interm
+        if self.map_mat is not None and not high_dim:
 
-      else:
+            interm = self._mapped_decode(new_data)
+            if self.center:
+                interm = (
+                    interm + self.mapped_mean_flow)
+            return interm
 
-          interm = self.pod.inverse_project(new_data)
-          return self.rom.decenter(self.rom.denormalize(interm))
-          
-  def _mapped_decode(self, new_data):
+        else:
+
+            return super().decode(new_data)
+
+    def _mapped_decode(self, new_data):
         return self.inverse_project_mat @ new_data
 
 
+class QuadManReducer(PodReducer):
+
+    def train(self, data, map_used=None, normalize=True, center=True):
+        super().train(data, map_used, normalize, center)
+        if map_used is not None:
+            self.inverse_project_Vbar = self.map_mat @ self.rom.denormalize(
+                self.pod.Vbar)
+
+    def _call_POD_core(self):
+        return QUAD_MAN()
+
+    def _mapped_decode(self, new_data):
+        return super()._mapped_decode(new_data) + self.inverse_project_Vbar @ self.pod._kron_x_sq(new_data)
